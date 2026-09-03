@@ -2,7 +2,7 @@
 
 ## 最終更新日
 
-2025 年 12 月 1 日（月）
+2026 年 9 月 3 日（木）
 
 ---
 
@@ -11,7 +11,7 @@
 | key      | value                                     |
 | -------- | ----------------------------------------- |
 | 名前     | 大宮瑞基                                  |
-| 年齢     | 満 27 歳                                  |
+| 年齢     | 満 28 歳                                  |
 | 居住地   | 東京都西東京市                              |
 | 最寄駅   | 西武池袋線保谷駅                        |
 | 最終学歴 | 法政大学 国際文化学部 国際文化学科        |
@@ -22,23 +22,29 @@
 
 ## スキルサマリー
 
+### AI / LLM活用 :star: :star: :star: :star:
+
+要件定義から実装、Claude Codeを用いた開発フロー構築まで 1 人で対応可能
+
+Anthropic Claude API | OpenAI API | Google Gemini API | Google Cloud Document AI | Dify | RAG | AIエージェント設計 | MCP（Model Context Protocol） | Claude Code
+
 ### フロントエンド :star: :star: :star: :star:
 
 環境構築からリリースまで 1 人ですべて対応可能
 
 HTML5 | CSS3 | JavaScript | TypeScript | React | Next.js | Svelte | SvelteKit | Recoil | Apollo Client | GraphQL | Zod | SWR | Lit Element | Storybook | styled-components | emotion | TailwindCSS | dayjs | Jest | React Testing Library | Vitest | Cypress | PlayWright | ESLint | Prettier | Husky | Renovate
 
-### バックエンド :star: :star:
+### バックエンド :star: :star: :star:
 
-小規模サービスなら 1 人で設計と実装が可能
+中規模サービスなら 1 人で設計と実装が可能
 
-PHP | Laravel | Go | Gin
+PHP | Laravel | Go | Gin | Python | FastAPI
 
 ### インフラ :star:
 
 小規模サービスなら 1 人で設計と実装が可能
 
-MySQL | PostgreSQL | Vercel | Heroku | GitHub | GitHub Pages | GitHub Packages | GitHub Actions | Docker | Docker Compose | nginx | Apache | AWS | GCP | Auth0 | Firebase
+MySQL | PostgreSQL | Vercel | Heroku | GitHub | GitHub Pages | GitHub Packages | GitHub Actions | Docker | Docker Compose | nginx | Apache | AWS | GCP | Auth0 | Firebase | Terraform
 
 ---
 
@@ -50,22 +56,115 @@ MySQL | PostgreSQL | Vercel | Heroku | GitHub | GitHub Pages | GitHub Packages |
 既存機能の追加・改修と新規開発のどちらも経験しているため、  
 プロジェクトに応じてどちらでも柔軟に対応することが可能です。
 
-技術的な得意分野は`WEBフロントエンド領域における新規開発`です。
+`React・TypeScript・Next.js`を用いた新規開発をメインにこなしてきた WEB フロントエンド領域の実務経験を土台に、  
+現在は`Anthropic Claude API`をはじめとする LLM を業務システムに組み込む AI 導入支援を中心に活動しています。  
+PoC の検証設計から、AI エージェントの設計・実装、Claude Code を用いた開発フローの構築まで、  
+「動くものを見せながら要件を育てる」アプローチで一気通貫の支援を行っています。
 
-`React・TypeScript・Next.js`を用いた新規開発をメインにこなしてきたため、  
-WEB フロントエンド領域の業務範囲は一通り網羅しています。  
 メンバーと PM に参画後の実績を認めていただき、PG での参画後 3 ヶ月でテックリードへ昇進した経験や  
 PM と PL からの指名を受けチーム内勉強会の主催の任を受けた経験もございます。
 
-今後は主にバックエンド、インフラ領域に関して知見を広げ  
-その案件で必要とされている技術やビジネス知識を素早くキャッチアップしていくことで  
-「上流工程から対応可能なエンジニア」になることを目指しています。
+技術的な得意分野は`AI/LLMを活用した業務システムの新規開発・PoC構築`です。  
+既存のフロントエンド領域の実務経験に加え、Python でのバックエンド開発や  
+Terraform を用いたインフラ構築まで、AI 導入案件に必要な技術領域を一人称で対応できるよう知見を広げています。
 
 ---
 
 ## 主な業務経歴
 
 以下に、過去に携わらせていただいたプロジェクトに関する概要と詳細を記載していきます。
+
+### プロジェクト概要
+
+BtoB 向け AI エージェントデモアプリの新規開発  
+Anthropic Claude API を中核に、複数の AI ペルソナが役割分担して動くエージェントアプリを新規開発。Slack・LINE・Discord 等マルチチャネルでのボット連携を実装。
+
+### プロジェクト期間
+
+2026 年 4 月 〜 現在
+
+### 使用言語・ライブラリ
+
+- TypeScript
+- Next.js
+- Anthropic Claude API（`@anthropic-ai/sdk`）
+
+### 担当業務
+
+- AI エージェントアプリの設計・実装
+- Slack・LINE・Discord 等マルチチャネルボット連携の実装
+
+---
+
+### プロジェクト概要
+
+旅行業 OTA 社内業務統合 MCP 基盤の開発  
+社内データへ AI から安全にアクセスできる基盤として、OAuth2.1 認可サーバーと複数の MCP サーバー群（運用・分析・パートナー業務等）を RBAC 制御付きで構築。一部サーバーでは sentence-transformers + FAISS によるベクトル検索（RAG 的な検索）も実装。
+
+### プロジェクト期間
+
+2025 年 8 月 〜 2026 年 6 月
+
+### 使用言語・ライブラリ
+
+- Python
+- FastMCP
+- OAuth2.1
+- sentence-transformers / FAISS
+
+### 担当業務
+
+- MCP サーバー群の設計・実装
+- RBAC 制御・認可基盤の構築
+- ベクトル検索によるナレッジ参照機能の実装
+
+---
+
+### プロジェクト概要
+
+製造業向け帳票検証 PoC  
+取引先から届く帳票 PDF の手書き署名有無判定・金額突合を自動化する PoC。Google Cloud Document AI（OCR）と Gemini（Vertex AI 経由）を組み合わせて実装し、Terraform で実行基盤を IaC 化。
+
+### プロジェクト期間
+
+2026 年 7 月 〜 2026 年 8 月
+
+### 使用言語・ライブラリ
+
+- TypeScript
+- Google Cloud Document AI
+- Google Gemini（Vertex AI）
+- Terraform
+
+### 担当業務
+
+- 帳票検証ロジックの設計・実装
+- Terraform による実行基盤の IaC 化
+
+---
+
+### プロジェクト概要
+
+帳票 AI-OCR 基盤の開発  
+帳票の AI-OCR（光学文字認識＋構造化）を中核とする SaaS のバックエンド API・業務 Web UI を開発。OpenAI・Claude・Gemini を用途に応じてアダプタ切替できる構成とし、OCR 後の構造化・フォールバック処理を実装。
+
+### プロジェクト期間
+
+2025 年 6 月 〜 2025 年 8 月
+
+### 使用言語・ライブラリ
+
+- Python
+- FastAPI
+- React / Vite
+- OpenAI API / Anthropic Claude API / Google Gemini API
+
+### 担当業務
+
+- バックエンド API・業務 Web UI の新規開発
+- 複数 LLM プロバイダーを切替可能にするアダプタ設計・実装
+
+---
 
 ### プロジェクト概要
 
