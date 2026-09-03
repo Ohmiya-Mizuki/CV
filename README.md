@@ -32,7 +32,7 @@ Anthropic Claude API | OpenAI API | Google Gemini API | Google Cloud Document AI
 
 環境構築からリリースまで 1 人ですべて対応可能
 
-HTML5 | CSS3 | JavaScript | TypeScript | React | Next.js | Svelte | SvelteKit | Recoil | Apollo Client | GraphQL | Zod | SWR | Lit Element | Storybook | styled-components | emotion | TailwindCSS | dayjs | Jest | React Testing Library | Vitest | Cypress | PlayWright | ESLint | Prettier | Husky | Renovate
+HTML5 | CSS3 | TypeScript | React | Next.js | Svelte | SvelteKit | Recoil | Apollo Client | GraphQL | Zod | SWR | Storybook | styled-components | emotion | TailwindCSS | dayjs | Jest | React Testing Library | Vitest | Cypress | PlayWright | ESLint | Prettier | Husky | Renovate
 
 ### バックエンド :star: :star: :star:
 
@@ -44,7 +44,7 @@ PHP | Laravel | Go | Gin | Python | FastAPI
 
 小規模サービスなら 1 人で設計と実装が可能
 
-MySQL | PostgreSQL | Vercel | Heroku | GitHub | GitHub Pages | GitHub Packages | GitHub Actions | Docker | Docker Compose | nginx | Apache | AWS | GCP | Auth0 | Firebase | Terraform
+MySQL | PostgreSQL | Vercel | GitHub | GitHub Actions | Docker | Docker Compose | nginx | Apache | AWS | GCP | Auth0 | Firebase | Terraform
 
 ---
 
