@@ -14,7 +14,8 @@
   - 出力: Draft PR まで。マージは本人が行う。
   - 公開範囲: 根拠と質問は非公開メモへ分け、PR本文には要約だけを書く。
   - レビュー: 差分と根拠だけを渡した別エージェントが、誇張と公開してはいけない情報を確認する。
-  - automation-harness（`.loopguardrails/`）は導入しない。スクリプトを持たないリポジトリのため、loop-review の6観点で設計した結果だけをここに残す。
+  - 端末依存の設定: 根拠を探す場所はディレクトリ構成が端末ごとに違い、公開リポジトリにも載せたくないため、`.claude/settings.local.json`（gitignore済み）の `env` で渡す。CVリポジトリ内のパスは `git rev-parse --show-toplevel` からの相対で決める。シェルの `export` はデスクトップアプリの定期タスクに渡らない可能性があるため使わない。
+  - automation-harness（`.loopguardrails/`）は導入しない。スクリプトは根拠のリポジトリを列挙する1本だけで、submodule・lefthook を入れるほどではないため、loop-review の6観点で設計した結果だけをここに残す。
 - loop-review の6観点:
   - Automations: ○ 月次の定期タスク
   - Worktrees: ○ `../CV-worktrees/cv-update-YYYY-MM` で作業し、手元のブランチを汚さない
