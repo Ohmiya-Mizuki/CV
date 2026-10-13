@@ -15,16 +15,45 @@ description: >
 
 ## 固定値
 
+パスはCVリポジトリのルート（`CV_ROOT`）からの相対で決める。
+
+```bash
+CV_ROOT="$(git rev-parse --show-toplevel)"
+```
+
 | 項目 | 値 |
 | --- | --- |
-| CVリポジトリ | `/Users/ohmiyamizuki/life/portfolio/CV`（本文は `README.md`） |
-| 作業worktree | `/Users/ohmiyamizuki/life/portfolio/CV-worktrees/cv-update-YYYY-MM` |
+| 本文 | `$CV_ROOT/README.md` |
+| 作業worktree | `$CV_ROOT/../CV-worktrees/cv-update-YYYY-MM` |
 | ブランチ | `cv-update/YYYY-MM` |
 | 公開してよい記録 | `docs/cv-update-log.md`（追記型） |
-| 非公開メモ | `/Users/ohmiyamizuki/life/portfolio/CV/.local/cv-update/YYYY-MM.md`（gitignore済み） |
+| 非公開メモ | `$CV_ROOT/.local/cv-update/YYYY-MM.md`（gitignore済み） |
 | 本人の作者表記 | 名前 `Ohmiya-Mizuki` / メール `m7xtgrmd.works@gmail.com` |
 
 `YYYY-MM` は実行日の年月。
+
+## 端末ごとの設定（環境変数）
+
+根拠を探しに行く場所は端末のディレクトリ構成に依存するため、リポジトリには書かず環境変数で渡す。
+`$CV_ROOT/.claude/settings.local.json`（gitignore済み）の `env` に設定する。
+
+| 変数 | 必須 | 内容 | 例 |
+| --- | --- | --- | --- |
+| `CV_EVIDENCE_DIRS` | 必須 | 案件リポジトリを探すディレクトリ。`:` 区切りで複数指定。6階層下までのGitリポジトリを対象にする | `/path/to/client-projects` |
+| `CV_EVIDENCE_EXCLUDE` | 任意 | 除外するディレクトリ名。`:` 区切り | `archive` |
+| `CV_SKILL_SHEET` | 任意 | 補足資料（スキルシート）のパス | `/path/to/skill-sheet.md` |
+
+```json
+{
+  "env": {
+    "CV_EVIDENCE_DIRS": "/path/to/client-projects",
+    "CV_EVIDENCE_EXCLUDE": "archive",
+    "CV_SKILL_SHEET": "/path/to/skill-sheet.md"
+  }
+}
+```
+
+`CV_EVIDENCE_DIRS` が未設定、または指定先が存在しない場合は、場所を推測して探さずに止まり、設定が必要なことを報告する。
 
 ## 手順（この順に実行する）
 
@@ -32,6 +61,7 @@ description: >
 
 - `gh pr list --repo Ohmiya-Mizuki/CV --state all --head cv-update/YYYY-MM` で当月のPRがあれば、何もせず終了する。
 - 非公開メモ `.local/cv-update/YYYY-MM.md` が既にあり「変更なし」で終わっていれば終了する。
+- `scripts/list-evidence-repos.sh` を実行する。手元のブランチに無ければ `bash <(git -C "$CV_ROOT" show origin/main:scripts/list-evidence-repos.sh)` で実行する。終了コード2（設定なし・指定先なし）なら、その旨を報告して終了する。
 
 ### 2. 調査期間を決める
 
@@ -41,7 +71,9 @@ description: >
 
 ### 3. 根拠を集める（読み取りのみ）
 
-対象は `/Users/ohmiyamizuki/life/client-projects/` 配下のGitリポジトリ（`archive/` を除く）。
+対象は手順1で列挙したGitリポジトリ。`scripts/list-evidence-repos.sh` は `node_modules`・隠しディレクトリ・`CV_EVIDENCE_EXCLUDE` の名前を除き、同じリポジトリのworktreeを1つにまとめる。
+
+各リポジトリで:
 
 ```bash
 git -C <repo> log --all --since=<開始日> --until=<終了日> \
@@ -51,8 +83,8 @@ git -C <repo> log --all --since=<開始日> --until=<終了日> \
 
 - 本人のコミットがあるリポジトリ: 期間内の最初と最後の日付、件数、主な変更領域、導入された技術（`package.json`・`pyproject.toml`・`go.mod`・`*.tf` 等の差分）を拾う。
 - 本人のコミットはないが期間内に更新があるリポジトリ（bot・AIエージェント経由の作業がありうる）: 「関与の確認が必要」として非公開メモに挙げるだけにする。
-- `/Users/ohmiyamizuki/life/skill-sheet.md` の更新内容（`stat` の更新日時と本文）を補足として読む。
-- `/Users/ohmiyamizuki/life/interview-prep/` は根拠にしない（回答案を職務経験の根拠にしない、という `catalog/career.md` のルール）。
+- `CV_SKILL_SHEET` が設定されていれば、その更新内容（`stat` の更新日時と本文）を補足として読む。
+- 面談の回答案・技術提案は根拠にしない（回答案を職務経験の根拠にしない）。
 - `.env`・秘密情報は読まない。
 
 ### 4. 差分を判断する
@@ -79,9 +111,9 @@ README.md の既存の書き方（「旅行業 OTA」「製造業向け」のよ
 ### 7. 反映する
 
 ```bash
-cd /Users/ohmiyamizuki/life/portfolio/CV
+cd "$CV_ROOT"
 git fetch origin
-git worktree add -b cv-update/YYYY-MM ../CV-worktrees/cv-update-YYYY-MM origin/main
+git worktree add -b cv-update/YYYY-MM "$CV_ROOT/../CV-worktrees/cv-update-YYYY-MM" origin/main
 ```
 
 worktree内で:
@@ -119,7 +151,7 @@ PR本文には「変更点の要約」と「本人確認待ちの質問が N 件
 - 本人への質問（回答をもらったら次回以降の手作業で README.md に反映する）
 
 最後に、作業worktreeは残したまま、PRのURLと質問件数を報告して終了する。
-PRマージ後の掃除は `git worktree remove ../CV-worktrees/cv-update-YYYY-MM`。
+PRマージ後の掃除は `git worktree remove "$CV_ROOT/../CV-worktrees/cv-update-YYYY-MM"`。
 
 ## 判断に迷ったとき
 
