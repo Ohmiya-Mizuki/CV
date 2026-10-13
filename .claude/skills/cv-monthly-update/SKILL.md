@@ -15,16 +15,45 @@ description: >
 
 ## 固定値
 
+パスはCVリポジトリのルート（`CV_ROOT`）からの相対で決める。
+
+```bash
+CV_ROOT="$(git rev-parse --show-toplevel)"
+```
+
 | 項目 | 値 |
 | --- | --- |
-| CVリポジトリ | `/Users/ohmiyamizuki/life/portfolio/CV`（本文は `README.md`） |
-| 作業worktree | `/Users/ohmiyamizuki/life/portfolio/CV-worktrees/cv-update-YYYY-MM` |
+| 本文 | `$CV_ROOT/README.md` |
+| 作業worktree | `$CV_ROOT/../CV-worktrees/cv-update-YYYY-MM` |
 | ブランチ | `cv-update/YYYY-MM` |
 | 公開してよい記録 | `docs/cv-update-log.md`（追記型） |
-| 非公開メモ | `/Users/ohmiyamizuki/life/portfolio/CV/.local/cv-update/YYYY-MM.md`（gitignore済み） |
+| 非公開メモ | `$CV_ROOT/.local/cv-update/YYYY-MM.md`（gitignore済み） |
 | 本人の作者表記 | 名前 `Ohmiya-Mizuki` / メール `m7xtgrmd.works@gmail.com` |
 
 `YYYY-MM` は実行日の年月。
+
+## 端末ごとの設定（環境変数）
+
+根拠を探しに行く場所は端末のディレクトリ構成に依存するため、リポジトリには書かず環境変数で渡す。
+`$CV_ROOT/.claude/settings.local.json`（gitignore済み）の `env` に設定する。
+
+| 変数 | 必須 | 内容 | 例 |
+| --- | --- | --- | --- |
+| `CV_EVIDENCE_DIRS` | 必須 | 案件リポジトリを探すディレクトリ。`:` 区切りで複数指定。6階層下までのGitリポジトリを対象にする | `/path/to/client-projects` |
+| `CV_EVIDENCE_EXCLUDE` | 任意 | 除外するディレクトリ名。`:` 区切り | `archive` |
+| `CV_SKILL_SHEET` | 任意 | 補足資料（スキルシート）のパス | `/path/to/skill-sheet.md` |
+
+```json
+{
+  "env": {
+    "CV_EVIDENCE_DIRS": "/path/to/client-projects",
+    "CV_EVIDENCE_EXCLUDE": "archive",
+    "CV_SKILL_SHEET": "/path/to/skill-sheet.md"
+  }
+}
+```
+
+`CV_EVIDENCE_DIRS` が未設定、または指定先が存在しない場合は、場所を推測して探さずに止まり、設定が必要なことを報告する。
 
 ## 手順（この順に実行する）
 
@@ -32,6 +61,7 @@ description: >
 
 - `gh pr list --repo Ohmiya-Mizuki/CV --state all --head cv-update/YYYY-MM` で当月のPRがあれば、何もせず終了する。
 - 非公開メモ `.local/cv-update/YYYY-MM.md` が既にあり「変更なし」で終わっていれば終了する。
+- `scripts/list-evidence-repos.sh` を実行する。手元のブランチに無ければ `bash <(git -C "$CV_ROOT" show origin/main:scripts/list-evidence-repos.sh)` で実行する。終了コード2（設定なし・指定先なし）なら、その旨を報告して終了する。
 
 ### 2. 調査期間を決める
 
@@ -41,7 +71,9 @@ description: >
 
 ### 3. 根拠を集める（読み取りのみ）
 
-対象は `/Users/ohmiyamizuki/life/client-projects/` 配下のGitリポジトリ（`archive/` を除く）。
+対象は手順1で列挙したGitリポジトリ。`scripts/list-evidence-repos.sh` は `node_modules`・隠しディレクトリ・`CV_EVIDENCE_EXCLUDE` の名前を除き、同じリポジトリのworktreeを1つにまとめる。
+
+各リポジトリで:
 
 ```bash
 git -C <repo> log --all --since=<開始日> --until=<終了日> \
@@ -51,9 +83,21 @@ git -C <repo> log --all --since=<開始日> --until=<終了日> \
 
 - 本人のコミットがあるリポジトリ: 期間内の最初と最後の日付、件数、主な変更領域、導入された技術（`package.json`・`pyproject.toml`・`go.mod`・`*.tf` 等の差分）を拾う。
 - 本人のコミットはないが期間内に更新があるリポジトリ（bot・AIエージェント経由の作業がありうる）: 「関与の確認が必要」として非公開メモに挙げるだけにする。
-- `/Users/ohmiyamizuki/life/skill-sheet.md` の更新内容（`stat` の更新日時と本文）を補足として読む。
-- `/Users/ohmiyamizuki/life/interview-prep/` は根拠にしない（回答案を職務経験の根拠にしない、という `catalog/career.md` のルール）。
+- `CV_SKILL_SHEET` が設定されていれば、その更新内容（`stat` の更新日時と本文）を補足として読む。
+- 面談の回答案・技術提案は根拠にしない（回答案を職務経験の根拠にしない）。
 - `.env`・秘密情報は読まない。
+
+### 3-2. 業務経歴書とスキルシートを突き合わせる（調査期間に関係なく毎回）
+
+月次の差分だけを見ると、過去の更新で漏れた案件や、終わったのに「〜 現在」のままの案件に気づけない。毎回、全案件を対象に次を確認する。`CV_SKILL_SHEET` が未設定の場合は、スキルシートとの照合を飛ばし、コミット履歴との照合だけを行う。
+
+- `README.md` の全案件（「プロジェクト概要」の1行目と「プロジェクト期間」）と、`CV_SKILL_SHEET` の全案件（案件名と期間）を対応づけ、次を拾う。
+  - スキルシートにだけある案件（業務経歴書への掲載漏れの候補）
+  - 両方にあるが期間が食い違う案件
+- `README.md` で「〜 現在」になっている案件は、対応するリポジトリの本人の最終コミット日を調査期間に関係なく確認する（`git log --all --author=... -1 --format=%ad`）。
+  - 直近2か月に本人のコミットがない、またはスキルシートで終了している場合は、終了の候補とする。
+  - 対応するリポジトリが手順1の列挙に出てこない場合（`CV_EVIDENCE_EXCLUDE` のアーカイブへ移した等）も、終了の候補とする。
+- 開始月も、本人の最初のコミット日・スキルシートと食い違っていないか確認する。
 
 ### 4. 差分を判断する
 
@@ -62,10 +106,20 @@ git -C <repo> log --all --since=<開始日> --until=<終了日> \
 | 区分 | 例 | 扱い |
 | --- | --- | --- |
 | 確定 | 「〜 現在」の案件に本人コミットが続いている／終わった案件の期間の終わりがコミット履歴で明らか／本人コミットで導入した技術を使用技術に追加 | README.md に反映する |
-| 要確認 | 新しい案件らしき活動、担当範囲・役割・成果、チーム構成、期間の終わりが曖昧なもの | 非公開メモに質問として書く。README.md は変えない |
+| 要確認 | 新しい案件らしき活動、担当範囲・役割・成果、チーム構成、期間の終わりが曖昧なもの、手順3-2で見つかった掲載漏れ・期間の食い違い | 非公開メモに質問として書く。README.md は変えない |
 | 対象外 | 個人開発（`side-projects/`）、学習、面談の回答案 | 触れない |
 
 推測で埋めない。案件の説明文・発揮したバリューは本人の言葉が必要なため、新規作成しない。
+ただし、スキルシートにある案件を本人が掲載すると決めた場合は、スキルシートの記載（本人が作成した資料）を業務経歴書の書式に合わせて要約してよい。
+要約した役割・担当業務・成果は、本人の確認なしに掲載しない。スキルシートの記載も誤っていることがある（2026年10月、役割欄の誤りをそのまま要約した）。手動実行では掲載前に1項目ずつ確認し、定期実行では非公開メモの質問に回す。
+
+#### 本人がその場にいる場合（手動実行）
+
+定期タスクではなく本人の依頼で実行している場合は、「要確認」の事項を非公開メモに回す前に、AskUserQuestion でその場で確認する。
+
+- 1回の質問は、掲載するか・期間をどちらに合わせるか、のように選択肢で答えられる形にまとめる。
+- 本人が承認した事項は「確定」として扱い、回答の内容を手順8・10の根拠一覧に「本人の確認」として残す。
+- 本人が「調べてから決める」と答えた事項は今回の差分に入れず、調べた結果を非公開メモの質問に残す。
 
 ### 5. 公開してよいかを確認する
 
@@ -79,9 +133,9 @@ README.md の既存の書き方（「旅行業 OTA」「製造業向け」のよ
 ### 7. 反映する
 
 ```bash
-cd /Users/ohmiyamizuki/life/portfolio/CV
+cd "$CV_ROOT"
 git fetch origin
-git worktree add -b cv-update/YYYY-MM ../CV-worktrees/cv-update-YYYY-MM origin/main
+git worktree add -b cv-update/YYYY-MM "$CV_ROOT/../CV-worktrees/cv-update-YYYY-MM" origin/main
 ```
 
 worktree内で:
@@ -91,7 +145,7 @@ worktree内で:
 
 ### 8. 別エージェントにレビューさせる
 
-自分の判断理由は渡さず、`git diff origin/main` と手順3の根拠一覧だけを渡したサブエージェントに次を確認させる。
+自分の判断理由は渡さず、`git diff origin/main` と手順3・3-2の根拠一覧（本人の確認を含む）だけを渡したサブエージェントに次を確認させる。
 
 - 根拠のない記述・誇張がないか
 - 手順5の公開してはいけない情報が含まれていないか
@@ -119,7 +173,7 @@ PR本文には「変更点の要約」と「本人確認待ちの質問が N 件
 - 本人への質問（回答をもらったら次回以降の手作業で README.md に反映する）
 
 最後に、作業worktreeは残したまま、PRのURLと質問件数を報告して終了する。
-PRマージ後の掃除は `git worktree remove ../CV-worktrees/cv-update-YYYY-MM`。
+PRマージ後の掃除は `git worktree remove "$CV_ROOT/../CV-worktrees/cv-update-YYYY-MM"`。
 
 ## 判断に迷ったとき
 
