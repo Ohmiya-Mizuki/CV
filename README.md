@@ -153,26 +153,21 @@ Anthropic Claude API を中核に、複数の AI ペルソナが役割分担し�
 
 ---
 
-### プロジェクト概要
+### 製造業向け帳票検証 PoC
 
-製造業向け帳票検証 PoC  
-取引先から届く帳票 PDF の手書き署名有無判定・金額突合を自動化する PoC。Google Cloud Document AI（OCR）と Gemini（Vertex AI 経由）を組み合わせて実装し、Terraform で実行基盤を IaC 化。
+| 項目     | 内容                                                     |
+| -------- | -------------------------------------------------------- |
+| 期間     | 2026 年 7 月 〜 2026 年 8 月（並行稼働）                 |
+| 参画形態 | 業務委託                                                 |
+| 役割     | 主担当エンジニア（設計・実装・IaC・レビュー）            |
+| 体制     | 5 名                                                     |
+| 主な技術 | TypeScript / Google Cloud Document AI / Gemini（Vertex AI）/ Terraform |
 
-### プロジェクト期間
+取引先から届く帳票 PDF の手書き署名の有無の判定と金額の突合を自動化する PoC。
 
-2026 年 7 月 〜 2026 年 8 月
-
-### 使用言語・ライブラリ
-
-- TypeScript
-- Google Cloud Document AI
-- Google Gemini（Vertex AI）
-- Terraform
-
-### 担当業務
-
-- 帳票検証ロジックの設計・実装
-- Terraform による実行基盤の IaC 化
+- OCR・項目抽出に続く、生成 AI による承認サインの判定工程と、成果物のクラウドストレージ出力を設計・実装
+- 締め日に基づく月次集計レポートの CLI とジョブを設計・実装
+- Terraform で実行基盤を IaC 化し、外部ユーザーの権限をフォルダ単位に絞る最小権限の設計
 
 ---
 
