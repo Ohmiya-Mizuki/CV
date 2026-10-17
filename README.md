@@ -8,13 +8,9 @@
 
 ## 基本情報
 
-| key      | value                                     |
+| 項目     | 内容                                      |
 | -------- | ----------------------------------------- |
 | 名前     | 大宮瑞基                                  |
-| 年齢     | 満 28 歳                                  |
-| 居住地   | 東京都西東京市                              |
-| 最寄駅   | 西武池袋線保谷駅                        |
-| 最終学歴 | 法政大学 国際文化学部 国際文化学科        |
 | GitHub   | https://github.com/Ohmiya-Mizuki          |
 | Wantedly | https://www.wantedly.com/id/Ohmiya_Mizuki |
 
