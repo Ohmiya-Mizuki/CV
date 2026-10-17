@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """提出用 Word の見た目を決める雛形（templates/reference.docx）を作る。
 
-pandoc 既定の雛形を元に、A4・余白 20mm・游ゴシック 10pt・日本語の言語設定に変える。
+pandoc 既定の雛形を元に、A4・余白 15mm・游ゴシック 9.5pt・日本語の言語設定に変える。
 見た目を変えたいときはこのスクリプトを直して再実行し、生成物もコミットする。
 """
 import re
@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "templates" / "reference.docx"
 
 FONT = "Yu Gothic"  # Windows / macOS の Word に標準で入っている游ゴシック
-BODY_HALF_POINTS = 20  # 10pt
+BODY_HALF_POINTS = 19  # 9.5pt
 HEADING_HALF_POINTS = {"Title": 32, "Heading1": 30, "Heading2": 26, "Heading3": 23, "Heading4": 21}
 # 段落の前後の間隔（twip）。A4 3〜4 枚に収めるため、pandoc 既定より詰める
 SPACING = {
@@ -26,12 +26,12 @@ SPACING = {
     "Heading3": (160, 40),
     "Heading4": (80, 20),
 }
-# A4（twip）と余白 20mm
+# A4（twip）と余白 15mm
 SECT_PR = (
     "<w:sectPr>"
     '<w:footnotePr><w:numRestart w:val="eachSect" /></w:footnotePr>'
     '<w:pgSz w:w="11906" w:h="16838" />'
-    '<w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" '
+    '<w:pgMar w:top="851" w:right="851" w:bottom="851" w:left="851" '
     'w:header="567" w:footer="567" w:gutter="0" />'
     "</w:sectPr>"
 )
