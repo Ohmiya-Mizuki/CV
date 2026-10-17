@@ -174,30 +174,6 @@ Anthropic Claude API を中核に、複数の AI ペルソナが役割分担し�
 
 ### プロジェクト概要
 
-旅行業 OTA 社内業務統合 MCP 基盤の開発  
-社内データへ AI から安全にアクセスできる基盤として、OAuth2.1 認可サーバーと複数の MCP サーバー群（運用・分析・パートナー業務等）を RBAC 制御付きで構築。一部サーバーでは sentence-transformers + FAISS によるベクトル検索（RAG 的な検索）も実装。
-
-### プロジェクト期間
-
-2025 年 8 月 〜 2026 年 6 月
-
-### 使用言語・ライブラリ
-
-- Python
-- FastMCP
-- OAuth2.1
-- sentence-transformers / FAISS
-
-### 担当業務
-
-- MCP サーバー群の設計・実装
-- RBAC 制御・認可基盤の構築
-- ベクトル検索によるナレッジ参照機能の実装
-
----
-
-### プロジェクト概要
-
 製造業向け帳票検証 PoC  
 取引先から届く帳票 PDF の手書き署名有無判定・金額突合を自動化する PoC。Google Cloud Document AI（OCR）と Gemini（Vertex AI 経由）を組み合わせて実装し、Terraform で実行基盤を IaC 化。
 
@@ -216,29 +192,6 @@ Anthropic Claude API を中核に、複数の AI ペルソナが役割分担し�
 
 - 帳票検証ロジックの設計・実装
 - Terraform による実行基盤の IaC 化
-
----
-
-### プロジェクト概要
-
-帳票 AI-OCR 基盤の開発  
-帳票の AI-OCR（光学文字認識＋構造化）を中核とする SaaS のバックエンド API・業務 Web UI を開発。OpenAI・Claude・Gemini を用途に応じてアダプタ切替できる構成とし、OCR 後の構造化・フォールバック処理を実装。
-
-### プロジェクト期間
-
-2025 年 6 月 〜 2025 年 8 月
-
-### 使用言語・ライブラリ
-
-- Python
-- FastAPI
-- React / Vite
-- OpenAI API / Anthropic Claude API / Google Gemini API
-
-### 担当業務
-
-- バックエンド API・業務 Web UI の新規開発
-- 複数 LLM プロバイダーを切替可能にするアダプタ設計・実装
 
 ---
 
