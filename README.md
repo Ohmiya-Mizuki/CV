@@ -27,49 +27,9 @@
 
 ---
 
-## 基本情報
+## 職務経歴
 
-| 項目     | 内容                                      |
-| -------- | ----------------------------------------- |
-| 名前     | 大宮瑞基                                  |
-| GitHub   | https://github.com/Ohmiya-Mizuki          |
-| Wantedly | https://www.wantedly.com/id/Ohmiya_Mizuki |
-
----
-
-## スキル
-
-| 分類           | 技術                                                     | 経験年数 | 直近の使用   |
-| -------------- | -------------------------------------------------------- | -------- | ------------ |
-| 言語           | TypeScript                                               | 5 年     | 2026 年 9 月 |
-| 言語           | PHP                                                      | 2 年     | 2026 年 9 月 |
-| 言語           | Go                                                       | 1 年未満 | 2022 年 11 月 |
-| フロントエンド | React / Next.js（Pages Router / App Router）             | 5 年     | 2026 年 9 月 |
-| フロントエンド | GraphQL（Apollo Client / graphql-codegen）               | 4 年     | 2025 年 10 月 |
-| フロントエンド | Tailwind CSS                                             | 3 年     | 2026 年 9 月 |
-| フロントエンド | shadcn/ui / Radix UI / Base UI                           | 2 年     | 2026 年 9 月 |
-| フロントエンド | Svelte 5 / SvelteKit                                     | 1 年     | 2025 年 10 月 |
-| テスト         | Storybook / VRT（storycap・reg-cli）                     | 4 年     | 2026 年 6 月 |
-| テスト         | Jest / React Testing Library                             | 3 年     | 2024 年 11 月 |
-| テスト         | Vitest / Testing Library                                 | 2 年     | 2026 年 9 月 |
-| テスト         | Playwright                                               | 2 年     | 2026 年 9 月 |
-| バックエンド   | Laravel（PHPUnit / PHPStan / Larastan）                  | 2 年     | 2026 年 9 月 |
-| データベース   | MySQL（RDS を含む）                                      | 3 年     | 2026 年 9 月 |
-| データベース   | PostgreSQL                                               | 1 年     | 2026 年 9 月 |
-| クラウド・IaC  | AWS（ECS・RDS・CodePipeline・CodeBuild・Lambda ほか）    | 2 年     | 2026 年 9 月 |
-| クラウド・IaC  | Google Cloud（Cloud Run・Document AI・Vertex AI ほか）   | 1 年     | 2026 年 9 月 |
-| クラウド・IaC  | Terraform                                                | 1 年     | 2026 年 9 月 |
-| 品質・CI       | GitHub Actions                                           | 4 年     | 2026 年 9 月 |
-| 品質・CI       | ESLint / Prettier                                        | 5 年     | 2026 年 9 月 |
-| 品質・CI       | lefthook / husky / commitlint                            | 3 年     | 2026 年 9 月 |
-| 品質・CI       | dependency-cruiser / knip                                | 2 年     | 2026 年 8 月 |
-| AI 駆動開発    | Claude Code / MCP（CLAUDE.md・rules・skills・hooks）     | 1 年     | 2026 年 9 月 |
-
----
-
-## 主な業務経歴
-
-以下に、過去に携わらせていただいたプロジェクトに関する概要と詳細を記載していきます。
+新しい順に記載する。期間が重なる案件は並行稼働。
 
 ### 製造業向け帳票検証 PoC
 
@@ -238,5 +198,42 @@ TV・ゲーム機などの特殊デバイス向けアプリのフロントエン
 | 2021 年 5 月                | YouTube マーケティング支援システムの開発。クリーンアーキテクチャに基づく設計 | 開発者（PM ＋ 開発者 3 名）                        | PHP / Laravel / YouTube API              |
 | 2021 年 2 月 〜 2021 年 5 月  | 印刷関連企業向け会員制メディアサイトの構築。納品後の保守・運用を月額契約で受注 | フロントエンド（技術選定から公開まで単独で担当、PM ＋ 自分の 2 名） | Next.js / Firebase / Vercel / WordPress API |
 
+---
+
+## スキル
+
+| 分類           | 技術                                                     | 経験年数 | 直近の使用   |
+| -------------- | -------------------------------------------------------- | -------- | ------------ |
+| 言語           | TypeScript                                               | 5 年     | 2026 年 9 月 |
+| 言語           | PHP                                                      | 2 年     | 2026 年 9 月 |
+| 言語           | Go                                                       | 1 年未満 | 2022 年 11 月 |
+| フロントエンド | React / Next.js（Pages Router / App Router）             | 5 年     | 2026 年 9 月 |
+| フロントエンド | GraphQL（Apollo Client / graphql-codegen）               | 4 年     | 2025 年 10 月 |
+| フロントエンド | Tailwind CSS                                             | 3 年     | 2026 年 9 月 |
+| フロントエンド | shadcn/ui / Radix UI / Base UI                           | 2 年     | 2026 年 9 月 |
+| フロントエンド | Svelte 5 / SvelteKit                                     | 1 年     | 2025 年 10 月 |
+| テスト         | Storybook / VRT（storycap・reg-cli）                     | 4 年     | 2026 年 6 月 |
+| テスト         | Jest / React Testing Library                             | 3 年     | 2024 年 11 月 |
+| テスト         | Vitest / Testing Library                                 | 2 年     | 2026 年 9 月 |
+| テスト         | Playwright                                               | 2 年     | 2026 年 9 月 |
+| バックエンド   | Laravel（PHPUnit / PHPStan / Larastan）                  | 2 年     | 2026 年 9 月 |
+| データベース   | MySQL（RDS を含む）                                      | 3 年     | 2026 年 9 月 |
+| データベース   | PostgreSQL                                               | 1 年     | 2026 年 9 月 |
+| クラウド・IaC  | AWS（ECS・RDS・CodePipeline・CodeBuild・Lambda ほか）    | 2 年     | 2026 年 9 月 |
+| クラウド・IaC  | Google Cloud（Cloud Run・Document AI・Vertex AI ほか）   | 1 年     | 2026 年 9 月 |
+| クラウド・IaC  | Terraform                                                | 1 年     | 2026 年 9 月 |
+| 品質・CI       | GitHub Actions                                           | 4 年     | 2026 年 9 月 |
+| 品質・CI       | ESLint / Prettier                                        | 5 年     | 2026 年 9 月 |
+| 品質・CI       | lefthook / husky / commitlint                            | 3 年     | 2026 年 9 月 |
+| 品質・CI       | dependency-cruiser / knip                                | 2 年     | 2026 年 8 月 |
+| AI 駆動開発    | Claude Code / MCP（CLAUDE.md・rules・skills・hooks）     | 1 年     | 2026 年 9 月 |
 
 ---
+
+## 基本情報
+
+| 項目     | 内容                                      |
+| -------- | ----------------------------------------- |
+| 名前     | 大宮瑞基                                  |
+| GitHub   | https://github.com/Ohmiya-Mizuki          |
+| Wantedly | https://www.wantedly.com/id/Ohmiya_Mizuki |
