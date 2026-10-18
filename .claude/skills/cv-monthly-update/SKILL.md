@@ -177,13 +177,13 @@ PR本文には「変更点の要約」と「本人確認待ちの質問が N 件
 エージェントへの提出は Word で行うため、PRの内容で Word を作っておく。worktree 内で次を実行する。
 
 ```bash
-scripts/build-docx.sh
+node scripts/build-docx.ts
 ```
 
 - 出力は本体のチェックアウトの `.local/cv/業務経歴書_YYYYMMDD.docx`（gitignore済み）。
 - 表示されるページ数（LibreOffice での目安）が 5 を超えたら（2026-10 に本人が 5 ページを上限と決めた）、非公開メモに「ページ数が N」と書き、削る候補を本人への質問に加える。今回の更新で増えた分は自分では削らない。
 - `pandoc` がない場合は、その旨を報告して手順を飛ばす（Word は本人がマージ後に作れる）。
-- 見た目を変えたい時は `scripts/make-reference-docx.py` を直して `templates/reference.docx` を作り直す。
+- 見た目を変えたい時は `scripts/make-reference-docx.ts` を直し、`node scripts/make-reference-docx.ts` で `templates/reference.docx` を作り直す。
 
 最後に、作業worktreeは残したまま、PRのURL・質問件数・Word のパスとページ数を報告して終了する。
 PRマージ後の掃除は `git worktree remove "$CV_ROOT/../CV-worktrees/cv-update-YYYY-MM"`。
