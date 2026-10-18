@@ -190,7 +190,7 @@ TV・ゲーム機などの特殊デバイス向けアプリのフロントエン
 | データベース   | PostgreSQL                                               | 1 年     | 2026 年 9 月 |
 | クラウド・IaC  | AWS（ECS・RDS・CodePipeline・CodeBuild・Lambda ほか）    | 2 年     | 2026 年 9 月 |
 | クラウド・IaC  | Google Cloud（Cloud Run・Document AI・Vertex AI ほか）   | 1 年     | 2026 年 9 月 |
-| クラウド・IaC  | Terraform                                                | 1 年     | 2026 年 9 月 |
+| クラウド・IaC  | Terraform                                                | 2 年     | 2026 年 9 月 |
 | 品質・CI       | GitHub Actions                                           | 4 年     | 2026 年 9 月 |
 | 品質・CI       | ESLint / Prettier                                        | 5 年     | 2026 年 9 月 |
 | 品質・CI       | lefthook / husky / commitlint                            | 3 年     | 2026 年 9 月 |
