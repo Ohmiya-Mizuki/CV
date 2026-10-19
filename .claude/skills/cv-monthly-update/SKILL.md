@@ -174,7 +174,11 @@ PR本文には「変更点の要約」と「本人確認待ちの質問が N 件
 
 ### 11. 提出用の Word を作る
 
-エージェントへの提出は Word で行うため、PRの内容で Word を作っておく。worktree 内で次を実行する。
+エージェントへの提出は Word で行うため、業務経歴書とスキルシートの Word を作っておく。
+
+#### 業務経歴書
+
+PRの内容で作る。worktree 内で次を実行する。
 
 ```bash
 node scripts/build-docx.ts
@@ -185,7 +189,21 @@ node scripts/build-docx.ts
 - `pandoc` がない場合は、その旨を報告して手順を飛ばす（Word は本人がマージ後に作れる）。
 - 見た目を変えたい時は `scripts/make-reference-docx.ts` を直し、`node scripts/make-reference-docx.ts` で `templates/reference.docx` を作り直す。
 
-最後に、作業worktreeは残したまま、PRのURL・質問件数・Word のパスとページ数を報告して終了する。
+#### スキルシート
+
+提出には、業務経歴書に載せない案件（`docs/cv-excluded-projects.md`）を外した版を使う。全案件の版は、スキルシートの表の食い違いを見つけるために作る。worktree 内で次を実行する。
+
+```bash
+node scripts/build-skill-sheet-docx.ts --exclude
+node scripts/build-skill-sheet-docx.ts
+```
+
+- 出力は本体のチェックアウトの `.local/cv/`（gitignore済み）。`スキルシート_載せない案件を除外_YYYYMMDD.docx` と `スキルシート_YYYYMMDD.docx`。スキルシート自体は変えない。
+- 「スキルシートに見つからない案件名」の警告が出たら、載せない案件の一覧とスキルシートの案件名がずれている。非公開メモの質問に加える（一覧を直すか、スキルシートの案件名を直すかは本人が決める）。
+- 全案件の版（`--exclude` なし）で「経験件数を数え直した」と出た場合は、スキルシートの「担当可能な工程」の表と各案件の担当工程が食い違っている。違う工程を非公開メモの質問に加える（2026-10 に一度揃えたので、新しい案件を足したときに起きる）。除外ありの版で件数が変わるのは、案件を外した分なので問題ない。
+- `CV_SKILL_SHEET` が未設定の場合は、その旨を報告して飛ばす。
+
+最後に、作業worktreeは残したまま、PRのURL・質問件数・Word（業務経歴書と、スキルシートの2つの版）のパスとページ数を報告して終了する。
 PRマージ後の掃除は `git worktree remove "$CV_ROOT/../CV-worktrees/cv-update-YYYY-MM"`。
 
 ## 判断に迷ったとき
