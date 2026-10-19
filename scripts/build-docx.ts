@@ -33,13 +33,13 @@ export function countPdfPages(pdf: Buffer): number {
   return pdf.toString("latin1").match(/\/Type\s*\/Page(?!s)/g)?.length ?? 0;
 }
 
-export function defaultFileName(date: Date = new Date()): string {
+export function defaultFileName(date: Date = new Date(), prefix = "業務経歴書"): string {
   const pad = (n: number): string => String(n).padStart(2, "0");
-  return `業務経歴書_${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}.docx`;
+  return `${prefix}_${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}.docx`;
 }
 
-/** README.md から docx を作り、出力先のパスを返す */
-export function buildDocx(repoRoot: string, fileName: string = defaultFileName()): string {
+/** Markdown を雛形の見た目で docx にし、本体のチェックアウトの .local/cv/ に出す。出力先のパスを返す */
+export function renderDocx(repoRoot: string, markdown: string, fileName: string): string {
   const reference = join(repoRoot, "templates", "reference.docx");
   if (!existsSync(reference)) {
     throw new Error("雛形がありません: node scripts/make-reference-docx.ts を実行してください。");
@@ -51,9 +51,14 @@ export function buildDocx(repoRoot: string, fileName: string = defaultFileName()
   execFileSync(
     "pandoc",
     ["--from", "markdown+autolink_bare_uris", "--to", "docx", "--columns", "20", "--reference-doc", reference, "--output", out],
-    { input: stripRules(readFileSync(join(repoRoot, "README.md"), "utf8")) },
+    { input: markdown },
   );
   return out;
+}
+
+/** README.md から docx を作り、出力先のパスを返す */
+export function buildDocx(repoRoot: string, fileName: string = defaultFileName()): string {
+  return renderDocx(repoRoot, stripRules(readFileSync(join(repoRoot, "README.md"), "utf8")), fileName);
 }
 
 /**
