@@ -63,7 +63,7 @@ describe("コマンドとして実行", { skip: !hasCommand("pandoc") && "pandoc
     const { CV_SKILL_SHEET: _sheet, ...rest } = process.env;
     return spawnSync("node", [join(repo, "scripts", "build-skill-sheet-docx.ts"), ...args], {
       encoding: "utf8",
-      env: { ...rest, CV_DOCX_SKIP_PREVIEW: "1", ...env },
+      env: { ...rest, CV_DOCX_SKIP_PDF: "1", ...env },
     });
   };
 

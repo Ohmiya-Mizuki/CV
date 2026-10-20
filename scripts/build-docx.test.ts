@@ -107,7 +107,7 @@ describe("コマンドとして実行", { skip: !hasCommand("pandoc") && "pandoc
     for (const file of ["build-docx.ts", "docx.ts"]) copyFileSync(join(scripts, file), join(cwd, "scripts", file));
     return spawnSync("node", [join(cwd, "scripts", "build-docx.ts"), ...args], {
       encoding: "utf8",
-      env: { ...process.env, CV_DOCX_SKIP_PREVIEW: "1" },
+      env: { ...process.env, CV_DOCX_SKIP_PDF: "1" },
     });
   }
 
