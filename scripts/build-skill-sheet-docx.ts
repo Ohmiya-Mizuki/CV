@@ -16,12 +16,15 @@ import {
   widenTableColumns,
   type ProcessChange,
 } from "./skill-sheet.ts";
+import { findDraftNotes, warnDraftNotes, type DraftNote } from "./draft-notes.ts";
 
 export type SkillSheetResult = {
   out: string;
   excluded: string[];
   notFound: string[];
   changes: ProcessChange[];
+  /** Word にした文章に残っている、作業メモのような文言（行番号は加工後の文章のもの） */
+  draftNotes: DraftNote[];
 };
 
 /** スキルシートを加工して docx を作る */
@@ -45,7 +48,13 @@ export function buildSkillSheetDocx(
   markdown = widenTableColumns(dropPlaceholderRows(recounted.markdown));
   const fileName =
     options.fileName ?? defaultFileName(new Date(), options.exclude ? "スキルシート_載せない案件を除外" : "スキルシート");
-  return { out: renderDocx(repoRoot, markdown, fileName), excluded, notFound, changes: recounted.changes };
+  return {
+    out: renderDocx(repoRoot, markdown, fileName),
+    excluded,
+    notFound,
+    changes: recounted.changes,
+    draftNotes: findDraftNotes(markdown),
+  };
 }
 
 if (import.meta.main) {
@@ -80,5 +89,6 @@ if (import.meta.main) {
     console.error("注意: 「担当可能な工程」の経験件数を各案件から数え直した（スキルシート自体は変えていない）:");
     for (const { process: name, before, after } of result.changes) console.error(`  ${name}: ${before} → ${after}`);
   }
+  warnDraftNotes(result.draftNotes, "Word にしたスキルシート");
   reportPdf(result.out);
 }
