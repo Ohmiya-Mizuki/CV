@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { describe, test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { buildDocx, countPdfPages, defaultFileName, exportPdf, outputDir, pdfPathFor, stripRules } from "./build-docx.ts";
-import { git, hasCommand, initRepo, tempDir } from "./test-helpers.ts";
+import { git, hasCommand, initRepo, tempDir, writeFile } from "./test-helpers.ts";
 
 const scripts = dirname(fileURLToPath(import.meta.url));
 const reference = join(scripts, "..", "templates", "reference.docx");
@@ -129,7 +129,7 @@ describe("コマンドとして実行", { skip: !hasCommand("pandoc") && "pandoc
   function run(cwd: string, ...args: string[]) {
     // リポジトリの中にスクリプトを置いて実行する（スクリプトの場所からリポジトリを決めるため）
     mkdirSync(join(cwd, "scripts"), { recursive: true });
-    for (const file of ["build-docx.ts", "docx.ts"]) copyFileSync(join(scripts, file), join(cwd, "scripts", file));
+    for (const file of ["build-docx.ts", "docx.ts", "draft-notes.ts"]) copyFileSync(join(scripts, file), join(cwd, "scripts", file));
     return spawnSync("node", [join(cwd, "scripts", "build-docx.ts"), ...args], {
       encoding: "utf8",
       env: { ...process.env, CV_DOCX_SKIP_PDF: "1" },
@@ -142,6 +142,15 @@ describe("コマンドとして実行", { skip: !hasCommand("pandoc") && "pandoc
     assert.equal(result.status, 0, result.stderr);
     assert.equal(result.stdout.trim(), join(main, ".local", "cv", "cli.docx"));
     assert.ok(existsSync(join(main, ".local", "cv", "cli.docx")));
+  });
+
+  test("README.md に作業メモのような文言があれば、警告して Word は作る", () => {
+    const { main } = repoWithWorktree();
+    writeFile(join(main, "README.md"), `${README}\n- 担当（レビュー中）\n`);
+    const result = run(main, "note.docx");
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stderr, /作業メモのような文言/);
+    assert.match(result.stderr, /担当（レビュー中）/);
   });
 
   test("雛形がなければ終了コード 2", () => {
