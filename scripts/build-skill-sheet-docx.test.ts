@@ -17,7 +17,7 @@ function setup(): { repo: string; sheet: string } {
   mkdirSync(join(repo, "templates"));
   copyFileSync(join(scripts, "..", "templates", "reference.docx"), join(repo, "templates", "reference.docx"));
   mkdirSync(join(repo, "scripts"));
-  for (const file of ["build-skill-sheet-docx.ts", "build-docx.ts", "docx.ts", "skill-sheet.ts"]) {
+  for (const file of ["build-skill-sheet-docx.ts", "build-docx.ts", "docx.ts", "skill-sheet.ts", "draft-notes.ts"]) {
     copyFileSync(join(scripts, file), join(repo, "scripts", file));
   }
   const sheet = join(base, "life", "skill-sheet.md");
@@ -38,6 +38,18 @@ describe("buildSkillSheetDocx", { skip: !hasCommand("pandoc") && "pandoc がな�
     assert.doesNotMatch(xml, /【要記入】/);
     assert.deepEqual(result.excluded, []);
     assert.ok(result.changes.some((c) => c.process === "実装" && c.after === "有・3件"));
+    // 【要記入】の行は外れるので、警告の対象にならない
+    assert.deepEqual(result.draftNotes, []);
+  });
+
+  test("Word にした文章に作業メモのような文言が残っていれば返す", () => {
+    const { repo, sheet } = setup();
+    writeFile(sheet, SHEET.replace("| 担当工程 | 実装 |", "| 担当工程 | 実装 |\n| 解決した課題 | レビュー中 |"));
+    const result = buildSkillSheetDocx(repo, sheet, { fileName: "note.docx" });
+    assert.deepEqual(
+      result.draftNotes.map((n) => n.text),
+      ["| 解決した課題 | レビュー中 |"],
+    );
   });
 
   test("exclude で一覧の案件を外し、見つからない名前を返す", () => {

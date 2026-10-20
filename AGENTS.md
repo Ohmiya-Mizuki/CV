@@ -7,4 +7,5 @@
 - スキルシートの Word と PDF は `node scripts/build-skill-sheet-docx.ts` で `CV_SKILL_SHEET` から作る。`--exclude` で `docs/cv-excluded-projects.md` の案件を外す。経験件数は各案件から数え直し、【要記入】の行は外す（スキルシート自体は変えない）。
 - スクリプトは TypeScript（Node 24 で直接実行）と bash で書き、依存パッケージを増やさない。変更したら `node --test scripts/*.test.ts` と `shellcheck scripts/*.sh` を通す。PR と main への push で GitHub Actions（`.github/workflows/test.yml`）が同じ検査を行う。
 - クライアント名・サービス名・人名・URL・未公開の事業情報を、本文・PR・コミットに書かない。業種＋用途で表す。
+- 提出物（Word・PDF）になるため、作業メモのような文言（【要記入】、「〜時点」「レビュー中」「確認できない」など）を書かない。Word を作るスクリプトが警告する。
 - 根拠のない経験・役割・成果を書かない。不明な点は `.local/`（gitignore済み）にメモして本人に確認する。

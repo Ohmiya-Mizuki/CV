@@ -8,6 +8,7 @@ import { tmpdir } from "node:os";
 import { basename, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { patchDocx } from "./docx.ts";
+import { findDraftNotes, warnDraftNotes } from "./draft-notes.ts";
 
 const git = (cwd: string, ...args: string[]): string =>
   execFileSync("git", ["-C", cwd, ...args], { encoding: "utf8" }).trim();
@@ -123,5 +124,6 @@ if (import.meta.main) {
     process.exit(2);
   }
   console.log(out);
+  warnDraftNotes(findDraftNotes(readFileSync(join(repoRoot, "README.md"), "utf8")), "README.md");
   reportPdf(out);
 }
