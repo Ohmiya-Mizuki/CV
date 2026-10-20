@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { copyFileSync, existsSync, mkdirSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { describe, test } from "node:test";
 import { fileURLToPath } from "node:url";
-import { buildDocx, countPdfPages, defaultFileName, outputDir, stripRules } from "./build-docx.ts";
+import { buildDocx, countPdfPages, defaultFileName, exportPdf, outputDir, pdfPathFor, stripRules } from "./build-docx.ts";
 import { git, hasCommand, initRepo, tempDir } from "./test-helpers.ts";
 
 const scripts = dirname(fileURLToPath(import.meta.url));
@@ -61,6 +61,12 @@ describe("countPdfPages", () => {
   });
 });
 
+describe("pdfPathFor", () => {
+  test("docx と同じ場所・同じ名前で拡張子だけ .pdf にする", () => {
+    assert.equal(pdfPathFor("/a/b/業務経歴書_20261020.docx"), "/a/b/業務経歴書_20261020.pdf");
+  });
+});
+
 describe("defaultFileName", () => {
   test("日付を YYYYMMDD で付ける", () => {
     assert.equal(defaultFileName(new Date(2026, 9, 5)), "業務経歴書_20261005.docx");
@@ -99,6 +105,25 @@ describe("buildDocx", { skip: !hasCommand("pandoc") && "pandoc がない" }, () 
     assert.throws(() => buildDocx(repo, "test.docx"), /雛形がありません/);
   });
 });
+
+// LibreOffice を macOS の描画方式で動かすため、Mac で soffice がある場合だけ実行する（CI では飛ばす）
+describe(
+  "exportPdf",
+  { skip: !(process.platform === "darwin" && hasCommand("soffice") && hasCommand("pandoc")) && "Mac の LibreOffice がない" },
+  () => {
+    test("docx と同じ場所に PDF を作り、日本語のフォントを埋め込む", () => {
+      const { main } = repoWithWorktree();
+      const docx = buildDocx(main, "pdf.docx");
+      const result = exportPdf(docx);
+
+      assert.ok(result, "PDF を作れなかった");
+      assert.equal(result.pdf, join(main, ".local", "cv", "pdf.pdf"));
+      assert.ok(result.pages >= 1);
+      // 埋め込まれたフォントは /BaseFont /ABCDEF+HiraginoSans-W3 のように書かれる
+      assert.match(readFileSync(result.pdf).toString("latin1"), /\/BaseFont\s*\/[A-Z]{6}\+Hiragino/);
+    });
+  },
+);
 
 describe("コマンドとして実行", { skip: !hasCommand("pandoc") && "pandoc がない" }, () => {
   function run(cwd: string, ...args: string[]) {
