@@ -22,7 +22,11 @@ describe("findDraftNotes", () => {
     assert.deepEqual(findDraftNotes(md), []);
   });
 
-  test("TODO は単語として出てきたときだけ見つける", () => {
+  test("TODO は作業メモとして書かれたときだけ見つける", () => {
+    assert.equal(findDraftNotes("TODO: 書く").length, 1);
+    assert.equal(findDraftNotes("- TODO 書く").length, 1);
+    assert.equal(findDraftNotes("TBD：決める").length, 1);
     assert.deepEqual(findDraftNotes("TODOist というアプリ"), []);
+    assert.deepEqual(findDraftNotes("会議エージェント（アジェンダ・議事録・TODO）を実装"), []);
   });
 });
