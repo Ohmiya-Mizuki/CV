@@ -188,10 +188,10 @@ TV・ゲーム機などの特殊デバイス向けアプリのフロントエン
 
 | 分類           | 技術                                                     | 経験年数 | 直近の使用   |
 | ------------ | ---------------------------------------------- | ---------- | -------------- |
-| 言語           | TypeScript                                               | 5 年     | 2026 年 9 月 |
+| 言語           | TypeScript                                               | 5 年     | 2026 年 10 月 |
 | 言語           | PHP                                                      | 2 年     | 2026 年 9 月 |
 | 言語           | Go                                                       | 1 年未満 | 2022 年 11 月 |
-| フロントエンド | React / Next.js（Pages Router / App Router）             | 5 年     | 2026 年 9 月 |
+| フロントエンド | React / Next.js（Pages Router / App Router）             | 5 年     | 2026 年 10 月 |
 | フロントエンド | GraphQL（Apollo Client / graphql-codegen）               | 4 年     | 2025 年 10 月 |
 | フロントエンド | UI の実装（Tailwind CSS / shadcn/ui・Radix UI・Base UI / MUI / Mantine / Emotion・styled-components） | 5 年     | 2026 年 10 月 |
 | フロントエンド | Svelte 5 / SvelteKit                                     | 1 年     | 2025 年 10 月 |
@@ -201,7 +201,7 @@ TV・ゲーム機などの特殊デバイス向けアプリのフロントエン
 | テスト         | Playwright                                               | 2 年     | 2026 年 9 月 |
 | バックエンド   | Laravel（PHPUnit / PHPStan / Larastan）                  | 2 年     | 2026 年 9 月 |
 | データベース   | MySQL（RDS を含む）                                      | 3 年     | 2026 年 9 月 |
-| データベース   | PostgreSQL                                               | 1 年     | 2026 年 9 月 |
+| データベース   | PostgreSQL                                               | 1 年     | 2026 年 10 月 |
 | クラウド・IaC  | AWS（ECS・RDS・CodePipeline・CodeBuild・Lambda ほか）    | 2 年     | 2026 年 9 月 |
 | クラウド・IaC  | Google Cloud（Cloud Run・Document AI・Vertex AI ほか）   | 1 年     | 2026 年 9 月 |
 | クラウド・IaC  | Terraform                                                | 2 年     | 2026 年 9 月 |
@@ -209,7 +209,7 @@ TV・ゲーム機などの特殊デバイス向けアプリのフロントエン
 | 品質・CI       | ESLint / Prettier                                        | 5 年     | 2026 年 9 月 |
 | 品質・CI       | lefthook / husky / commitlint                            | 3 年     | 2026 年 9 月 |
 | 品質・CI       | dependency-cruiser / knip                                | 2 年     | 2026 年 8 月 |
-| AI 駆動開発    | Claude Code / MCP（CLAUDE.md・rules・skills・hooks）     | 1 年     | 2026 年 9 月 |
+| AI 駆動開発    | Claude Code / MCP（CLAUDE.md・rules・skills・hooks）     | 1 年     | 2026 年 10 月 |
 
 ---
 
