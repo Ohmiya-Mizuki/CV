@@ -6,7 +6,8 @@ export const DRAFT_NOTE_PATTERNS: RegExp[] = [
   /【要記入】|要記入/,
   /要確認|未確認|確認できない|確認待ち/,
   /レビュー中|実装中|対応中|検討中/,
-  /\bTODO\b|\bTBD\b|\bFIXME\b/,
+  // 「議事録・TODO」のような機能名は対象にしない。「TODO:」や行頭の「TODO」だけを見つける
+  /(?:TODO|TBD|FIXME)\s*[:：]|^\s*(?:[-*]\s*)?(?:TODO|TBD|FIXME)\b/,
 ];
 
 export type DraftNote = { line: number; text: string };
