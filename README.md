@@ -195,16 +195,19 @@ TV・ゲーム機などの特殊デバイス向けアプリのフロントエン
 | フロントエンド | GraphQL（Apollo Client / graphql-codegen）               | 4 年     | 2025 年 10 月 |
 | フロントエンド | UI の実装（Tailwind CSS / shadcn/ui・Radix UI・Base UI / MUI / Mantine / Emotion・styled-components） | 5 年     | 2026 年 10 月 |
 | フロントエンド | Svelte 5 / SvelteKit                                     | 1 年     | 2025 年 10 月 |
+| フロントエンド | Zod                                                      | 2 年     | 2026 年 9 月 |
 | テスト         | Storybook / VRT（storycap・reg-cli）                     | 4 年     | 2026 年 6 月 |
 | テスト         | Jest / React Testing Library                             | 3 年     | 2024 年 11 月 |
 | テスト         | Vitest / Testing Library                                 | 2 年     | 2026 年 9 月 |
 | テスト         | Playwright                                               | 2 年     | 2026 年 9 月 |
 | バックエンド   | Laravel（PHPUnit / PHPStan / Larastan）                  | 2 年     | 2026 年 9 月 |
+| バックエンド   | Prisma                                                   | 1 年未満 | 2026 年 10 月 |
 | データベース   | MySQL（RDS を含む）                                      | 3 年     | 2026 年 9 月 |
 | データベース   | PostgreSQL                                               | 1 年     | 2026 年 10 月 |
 | クラウド・IaC  | AWS（ECS・RDS・CodePipeline・CodeBuild・Lambda ほか）    | 2 年     | 2026 年 9 月 |
 | クラウド・IaC  | Google Cloud（Cloud Run・Document AI・Vertex AI ほか）   | 1 年     | 2026 年 9 月 |
 | クラウド・IaC  | Terraform                                                | 2 年     | 2026 年 9 月 |
+| クラウド・IaC  | Docker / Docker Compose                                  | 5 年     | 2026 年 10 月 |
 | 品質・CI       | GitHub Actions                                           | 4 年     | 2026 年 9 月 |
 | 品質・CI       | ESLint / Prettier                                        | 5 年     | 2026 年 9 月 |
 | 品質・CI       | lefthook / husky / commitlint                            | 3 年     | 2026 年 9 月 |
