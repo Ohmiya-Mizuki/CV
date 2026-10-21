@@ -193,8 +193,7 @@ TV・ゲーム機などの特殊デバイス向けアプリのフロントエン
 | 言語           | Go                                                       | 1 年未満 | 2022 年 11 月 |
 | フロントエンド | React / Next.js（Pages Router / App Router）             | 5 年     | 2026 年 9 月 |
 | フロントエンド | GraphQL（Apollo Client / graphql-codegen）               | 4 年     | 2025 年 10 月 |
-| フロントエンド | Tailwind CSS                                             | 3 年     | 2026 年 9 月 |
-| フロントエンド | shadcn/ui / Radix UI / Base UI                           | 2 年     | 2026 年 9 月 |
+| フロントエンド | UI の実装（Tailwind CSS / shadcn/ui・Radix UI・Base UI / MUI / Mantine / Emotion・styled-components） | 5 年     | 2026 年 10 月 |
 | フロントエンド | Svelte 5 / SvelteKit                                     | 1 年     | 2025 年 10 月 |
 | テスト         | Storybook / VRT（storycap・reg-cli）                     | 4 年     | 2026 年 6 月 |
 | テスト         | Jest / React Testing Library                             | 3 年     | 2024 年 11 月 |
