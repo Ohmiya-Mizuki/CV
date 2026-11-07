@@ -1,0 +1,26 @@
+name: Distribute merged document
+on:
+  pull_request_target:
+    types: [closed]
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  dispatch:
+    if: github.event.pull_request.merged == true && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      # Never execute the PR head with access to the dispatch credential.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24
+      - run: node scripts/dispatch-distribution.ts
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          CV_DISTRIBUTION_DISPATCH_TOKEN: ${{ secrets.CV_DISTRIBUTION_DISPATCH_TOKEN }}
+          DISTRIBUTION_REPOSITORY: ${{ vars.DISTRIBUTION_REPOSITORY }}
