@@ -21,5 +21,6 @@ jobs:
           node-version: 24
       - run: node scripts/dispatch-distribution.ts
         env:
+          GITHUB_TOKEN: ${{ github.token }}
           CV_DISTRIBUTION_DISPATCH_TOKEN: ${{ secrets.CV_DISTRIBUTION_DISPATCH_TOKEN }}
           DISTRIBUTION_REPOSITORY: ${{ vars.DISTRIBUTION_REPOSITORY }}
