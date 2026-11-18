@@ -28,7 +28,9 @@ CV_ROOT="$(git rev-parse --show-toplevel)"
 | ブランチ | `cv-update/YYYY-MM` |
 | 公開してよい記録 | `docs/cv-update-log.md`（追記型） |
 | 非公開メモ | `$CV_ROOT/.local/cv-update/YYYY-MM.md`（gitignore済み） |
-| 本人の作者表記 | 名前 `Ohmiya-Mizuki` / メール `m7xtgrmd.works@gmail.com` |
+| 本人の作者表記 | 名前 `Ohmiya-Mizuki` / メール `m7xtgrmd.works@gmail.com`（`scripts/evidence-log.sh` が持つ。足す分は `CV_EVIDENCE_AUTHORS`） |
+| PRのラベル | `cv-monthly-update` |
+| 見張りの目印 | `<!-- output-watch:cv-monthly-update -->`（PRの本文と、作らなかった月のコメントに1行入れる。HTMLのコメントなので画面には出ない） |
 
 `YYYY-MM` は実行日の年月。
 
@@ -42,18 +44,30 @@ CV_ROOT="$(git rev-parse --show-toplevel)"
 | `CV_EVIDENCE_DIRS` | 必須 | 案件リポジトリを探すディレクトリ。`:` 区切りで複数指定。6階層下までのGitリポジトリを対象にする | `/path/to/client-projects` |
 | `CV_EVIDENCE_EXCLUDE` | 任意 | 除外するディレクトリ名。`:` 区切り | `archive` |
 | `CV_SKILL_SHEET` | 任意 | 補足資料（スキルシート）のパス | `/path/to/skill-sheet.md` |
+| `CV_EVIDENCE_AUTHORS` | 任意 | 本人の作者表記（固定値）のほかに数える、作者の名前かメール。`:` 区切り。貸与PCなど、別の名前・メールでコミットする案件のために足す。公開のリポジトリには書かない | `name@client.example` |
+| `CV_EVIDENCE_FETCH_TIMEOUT` | 任意 | リモートからの取り込みを、1つのリポジトリにつき何秒で打ち切るか（既定 60） | `120` |
 
 ```json
 {
   "env": {
     "CV_EVIDENCE_DIRS": "/path/to/client-projects",
     "CV_EVIDENCE_EXCLUDE": "archive",
-    "CV_SKILL_SHEET": "/path/to/skill-sheet.md"
+    "CV_SKILL_SHEET": "/path/to/skill-sheet.md",
+    "CV_EVIDENCE_AUTHORS": "name@client.example"
   }
 }
 ```
 
 `CV_EVIDENCE_DIRS` が未設定、または指定先が存在しない場合は、場所を推測して探さずに止まり、設定が必要なことを報告する。
+
+## 新しい案件を始めるとき（本人の作業）
+
+月次更新は、この端末にあるリポジトリの履歴を根拠にする。貸与PCなど、ほかの端末で作業する案件は、次をしておかないと、履歴がこの端末に届かない。
+
+1. その案件のリポジトリを、この端末に clone してよいかを、契約と守秘の範囲で確かめる（案件ごとに本人が判断する）。
+2. よければ、`CV_EVIDENCE_DIRS` の配下に1回 clone する。そのあとは、月次更新が手順3-0で毎回リモートから取り込む（手で pull しなくてよい）。
+3. その案件で、本人の作者表記と違う名前・メールでコミットするなら、`CV_EVIDENCE_AUTHORS` に足す。
+4. clone できない案件は、スキルシートに案件と期間を書く。月次更新は、スキルシートを根拠にする（手順3-2）。
 
 ## 手順（この順に実行する）
 
@@ -61,7 +75,8 @@ CV_ROOT="$(git rev-parse --show-toplevel)"
 
 - `gh pr list --repo Ohmiya-Mizuki/CV --state all --head cv-update/YYYY-MM` で当月のPRがあれば、何もせず終了する。
 - 非公開メモ `.local/cv-update/YYYY-MM.md` が既にあり「変更なし」で終わっていれば終了する。
-- `scripts/list-evidence-repos.sh` を実行する。手元のブランチに無ければ `bash <(git -C "$CV_ROOT" show origin/main:scripts/list-evidence-repos.sh)` で実行する。終了コード2（設定なし・指定先なし）なら、その旨を報告して終了する。
+- `scripts/list-evidence-repos.sh` を実行する。手元のブランチに無ければ `bash <(git -C "$CV_ROOT" show origin/main:scripts/list-evidence-repos.sh)` で実行する。終了コード2（設定なし・指定先なし）なら、その旨を報告して終了する。`scripts/` のほかのスクリプト（`fetch-evidence-repos.sh`・`evidence-log.sh`）も、手元のブランチに無ければ同じ形で実行する。
+- 本人が読んでいない下書きがたまっていないかを数える。`gh pr list --repo Ohmiya-Mizuki/CV --state open --draft --label cv-monthly-update --json number --jq length` が 3 以上なら、新しく作らない。手順6の「印を残す」と同じ方法で、「変更なし」の代わりに「見送り（読んでいない下書きが3件ある）」とコメントして終了する。
 
 ### 2. 調査期間を決める
 
@@ -78,15 +93,28 @@ CV_ROOT="$(git rev-parse --show-toplevel)"
 - 「解決済み」は引き継がない。同じことを質問し直さない。
 - メモがなければ飛ばす。
 
-### 3. 根拠を集める（読み取りのみ）
+### 3-0. リモートから取り込む
+
+ほかの端末（貸与PCなど）で作業した分は、この端末のチェックアウトにない。根拠を読む前に、手順1で列挙したリポジトリへ、リモートの最新を取り込む。
+
+```bash
+bash scripts/list-evidence-repos.sh | bash scripts/fetch-evidence-repos.sh
+```
+
+- 出力は「結果<TAB>パス」。結果は `fetched`（取り込めた）・`failed`（取り込めなかった）・`no-remote`（リモートがない）。取り込めないリポジトリがあっても止まらない。
+- 行うのは `git fetch` だけ。pull・checkout・merge はしない（作業ツリーとローカルのブランチを変えない）。リモートで消えたブランチの控えも消さない。
+- 結果は、リポジトリごとに、手順10の「根拠一覧」に書く。
+- `failed` のリポジトリは、**手元にある履歴が古いかもしれない**。手元の履歴に本人のコミットがないことを、「活動がなかった」と読まない（扱いは手順3-2と4）。権限がない・リポジトリが移った・通信の失敗のどれかは区別しない。認証を直す・入力を求める・別の方法で取りに行く、はしない。
+- `no-remote` のリポジトリは、手元の履歴がすべてなので、そのまま根拠にする。
+
+### 3. 根拠を集める（取り込みのほかは読み取りのみ）
 
 対象は手順1で列挙したGitリポジトリ。`scripts/list-evidence-repos.sh` は `node_modules`・隠しディレクトリ・`CV_EVIDENCE_EXCLUDE` の名前を除き、同じリポジトリのworktreeを1つにまとめる。
 
-各リポジトリで:
+各リポジトリで（`scripts/evidence-log.sh` は、本人の作者表記と `CV_EVIDENCE_AUTHORS` の作者のコミットだけを、すべてのブランチとリモートの控えから読む。2つ目からの引数は `git log` に渡る）:
 
 ```bash
-git -C <repo> log --all --since=<開始日> --until=<終了日> \
-  --author='Ohmiya-Mizuki' --author='m7xtgrmd.works@gmail.com' \
+bash scripts/evidence-log.sh <repo> --since=<開始日> --until=<終了日> \
   --format='%ad %s' --date=short
 ```
 
@@ -103,9 +131,10 @@ git -C <repo> log --all --since=<開始日> --until=<終了日> \
 - `README.md` の全案件（「職務経歴」の `###` 見出しと「**期間**」の行。「その他の経歴」の表は各行）と、`CV_SKILL_SHEET` の全案件（案件名と期間）を対応づけ、次を拾う。
   - スキルシートにだけある案件（業務経歴書への掲載漏れの候補）。ただし `docs/cv-excluded-projects.md` にある案件は、本人が載せないと決めたものなので候補から外す
   - 両方にあるが期間が食い違う案件
-- `README.md` で「〜 現在」になっている案件は、対応するリポジトリの本人の最終コミット日を調査期間に関係なく確認する（`git log --all --author=... -1 --format=%ad`）。
+- `README.md` で「〜 現在」になっている案件は、対応するリポジトリの本人の最終コミット日を調査期間に関係なく確認する（`bash scripts/evidence-log.sh <repo> -1 --format=%ad --date=short`）。
   - 直近2か月に本人のコミットがない、またはスキルシートで終了している場合は、終了の候補とする。
-  - 対応するリポジトリが手順1の列挙に出てこない場合（`CV_EVIDENCE_EXCLUDE` のアーカイブへ移した等）も、終了の候補とする。
+  - ただし、対応するリポジトリが手順3-0で `failed` だった案件は、直近2か月に本人のコミットが手元になくても、終了の候補にしない。「取り込めなかったので、続いているか分からない」として要確認に回す（手元に直近のコミットがあれば、続いていると扱ってよい）。
+  - 対応するリポジトリが手順1の列挙に出てこない場合（`CV_EVIDENCE_EXCLUDE` のアーカイブへ移した等）は、スキルシートを見る。スキルシートで続いている案件（この端末に clone していない案件）は、終了の候補にせず、スキルシートの期間を根拠にする。スキルシートにもない・終了している・`CV_SKILL_SHEET` が未設定なら、終了の候補とする。
 - 開始月も、本人の最初のコミット日・スキルシートと食い違っていないか確認する。
 
 ### 4. 差分を判断する
@@ -115,7 +144,7 @@ git -C <repo> log --all --since=<開始日> --until=<終了日> \
 | 区分 | 例 | 扱い |
 | --- | --- | --- |
 | 確定 | 「〜 現在」の案件に本人コミットが続いている／終わった案件の期間の終わりがコミット履歴で明らか／本人コミットで導入した技術を使用技術に追加 | README.md に反映する |
-| 要確認 | 新しい案件らしき活動、担当範囲・役割・成果、チーム構成、期間の終わりが曖昧なもの、手順3-2で見つかった掲載漏れ・期間の食い違い | 非公開メモに質問として書く。README.md は変えない |
+| 要確認 | 新しい案件らしき活動、担当範囲・役割・成果、チーム構成、期間の終わりが曖昧なもの、手順3-2で見つかった掲載漏れ・期間の食い違い、取り込めなかった（`failed`）リポジトリの「〜 現在」の案件で、期間内の本人のコミットが手元にないもの | 非公開メモに質問として書く。README.md は変えない |
 | 対象外 | 個人開発（`side-projects/`）、学習、面談の回答案 | 触れない |
 
 推測で埋めない。案件の説明文・発揮したバリューは本人の言葉が必要なため、新規作成しない。
@@ -143,6 +172,17 @@ README.md の既存の書き方（「旅行業 OTA」「製造業向け」のよ
 ### 6. 「確定」が0件なら
 
 非公開メモに「変更なし」と根拠一覧・質問を書く。PRもコミットも作らない。
+
+**印を残す**（動いたうえで作らなかった月と、動かなかった月を、見張りが区別できるようにする）。この仕事の直近のPRに、次の2行だけをコメントする。公開の場所なので、理由・根拠・質問の中身・件数を書かない。
+
+```bash
+pr="$(gh pr list --repo Ohmiya-Mizuki/CV --state all --label cv-monthly-update --limit 1 --json number --jq '.[0].number // empty')"
+gh pr comment "$pr" --repo Ohmiya-Mizuki/CV --body "$(printf '変更なし（YYYY-MM）\n<!-- output-watch:cv-monthly-update -->')"
+```
+
+- ラベル `cv-monthly-update` の付いたPRが1つもなければ、ブランチが `cv-update/` で始まる直近のPRに、手順9の方法でラベルを付けてから、そのPRにコメントする。それもなければ、印を残せなかったことを報告する。
+- コメントできなかった場合（権限・通信）は、その旨を非公開メモと報告に書く。やり直しのために手順を繰り返さない。
+
 スキルシートは業務経歴書と別に更新されることがあるため、手順11の「スキルシートの Word」だけは本体のチェックアウトで作ってから終了する（`cd "$CV_ROOT"` してから、手順11の「スキルシート」の2つのコマンドを実行する。本体のチェックアウトにスクリプトがなければ、その旨を報告して飛ばす）。
 
 ### 7. 反映する
@@ -172,10 +212,13 @@ worktree内で:
 ```bash
 git commit -m "docs: YYYY年M月時点の業務経歴を更新"
 git push -u origin cv-update/YYYY-MM
-gh pr create --draft --base main --title "docs: YYYY年M月時点の業務経歴を更新" --body-file <本文>
+gh label create cv-monthly-update --repo Ohmiya-Mizuki/CV --description "月次更新が作ったPR" 2>/dev/null || true
+gh pr create --draft --base main --label cv-monthly-update --title "docs: YYYY年M月時点の業務経歴を更新" --body-file <本文>
 ```
 
 PR本文には「変更点の要約」と「本人確認待ちの質問が N 件あり、非公開メモにある」ことだけを書く。質問の中身・根拠の詳細はPRに書かない。
+PR本文の最後に、見張りの目印（固定値の表）を1行入れる。ラベルと目印の両方があるPRだけが、月次更新の成果として数えられる。
+目印は、月次更新が作るPRの本文と、手順6のコメントにだけ書く。ほかのPRやコメントに、説明として貼らない（貼ると、更新として数えられる）。
 マージ・Ready化はしない（本人が行う）。
 
 ### 10. 非公開メモを仕上げる
@@ -183,7 +226,7 @@ PR本文には「変更点の要約」と「本人確認待ちの質問が N 件
 `.local/cv-update/YYYY-MM.md` に、次の見出しで書く。次回の手順2-2がこの見出しで読むため、見出しの名前を変えない。
 
 - `## 調査期間`
-- `## 根拠一覧`（リポジトリごとのコミット件数・期間・技術）
+- `## 根拠一覧`（リポジトリごとの、手順3-0の取り込みの結果・コミット件数・期間・技術。`failed` のリポジトリは、そう分かるように書く）
 - `## 反映した内容`（PRのURLを含む）
 - `## 本人への質問（未解決）`（手順2-2で引き継いだものを含む。回答をもらったら次回以降の手作業で README.md に反映する）
 - `## 来月の月次更新で確認すること`（本人への質問ではなく、次回の自分への申し送り）
