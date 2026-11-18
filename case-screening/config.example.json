@@ -1,0 +1,23 @@
+{
+  "enabled": false,
+  "dryRun": true,
+  "sources": [
+    {
+      "name": "corporate",
+      "kind": "claude-gmail",
+      "account": "<法人の Gmail のアドレス（報告のリンクを開くアカウント）>",
+      "query": "from:(<紹介元のドメイン> OR <紹介元のドメイン>)"
+    },
+    {
+      "name": "freelance",
+      "kind": "gmail-api",
+      "account": "<個人事業の Gmail のアドレス>",
+      "query": "from:(<紹介元のドメイン> OR <紹介元のドメイン>)",
+      "tokenFile": "~/mac-mini-ci/ai-runtime/secrets/case-screening-gmail-freelance.json"
+    }
+  ],
+  "selectLabel": "案件-経歴書の案",
+  "skillSheet": "<スキルシートの絶対パス>",
+  "cvRepo": "<CV の手元のクローンの絶対パス>",
+  "inboxIssue": "Ohmiya-Mizuki/life#<案内の issue の番号>"
+}
